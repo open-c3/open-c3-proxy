@@ -1,0 +1,3 @@
+#!/bin/bash
+docker ps |grep openc3-proxy-|grep nginx|awk '{print $1}'|xargs -i{} docker stop {}
+docker ps -a|grep openc3-proxy-|grep nginx | awk '{print $1}'|xargs -i{} docker rm {}
