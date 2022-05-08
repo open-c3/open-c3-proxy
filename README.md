@@ -16,3 +16,9 @@ git clone https://github.com/open-c3/open-c3-proxy
 # addr 为要代理的openc3的ip地址或者域名，port为本地开启的新端口
 # 如：/data/open-c3-proxy/bin/start 10.10.10.2 8080
 ```
+
+# 版本
+
+## v1
+
+使用nginx缓存方式，请求过的文件进行缓存。
