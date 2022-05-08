@@ -18,6 +18,24 @@ sub sync
     map{ download( $host, $_ ) }( @x , @other );
 }
 
+sub grafana
+{
+    my $host = shift @_;
+    my $x = `curl $host/third-party/monitor/grafana/ 2>/dev/null`;
+    my @js = $x =~ /src="(public\/build\/[a-zA-Z0-9\.~]+\.js)"/g;
+    my @css = $x =~ /href="(public\/build\/[a-zA-Z0-9\.~]+\.css)"/g;
+    map{ download( $host, "third-party/monitor/grafana/$_" ) }( @js , @css );
+}
+
+sub prometheus
+{
+    my $host = shift @_;
+    my $x = `curl $host/third-party/monitor/prometheus/alerts 2>/dev/null`;
+    my @js = $x =~ /src="\.\/(static\/js\/[a-zA-Z0-9\.~]+\.js)"/g;
+    my @css = $x =~ /href="\.\/(static\/css\/[a-zA-Z0-9\.~]+\.css)"/g;
+    map{ download( $host, "third-party/monitor/prometheus/$_" ) }( @js , @css );
+}
+
 sub download
 {
     my ( $host, $uri ) = @_;
@@ -29,4 +47,4 @@ sub download
     system  "wget $host/$uri -O $path/cache/$uri" unless -f "$path/cache/$uri";
 }
 
-map{ sync($_) }@host;
+map{ sync($_); grafana( $_ ); prometheus($_); }@host;
