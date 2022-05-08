@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+
+my $path  = "/data/open-c3-proxy";
+my @host; map{ push @host, $1 if /^openc3-proxy-(.+)-\d+/ }`docker ps|grep openc3-proxy-|awk '{print \$NF}'`;
+
+my @other = qw(
+    fonts/glyphicons-halflings-regular.woff2
+    fonts/fontawesome-webfont.woff2
+    fonts/fontawesome-webfont.woff
+    fonts/fontawesome-webfont.ttf
+);
+
+sub sync
+{
+    my $host = shift @_;
+    my $x = `curl $host 2>/dev/null`;
+    my @x = $x =~ /(styles\/[a-z]+-[a-z0-9]+.css|scripts\/[a-z]+-[a-z0-9]+.js)/g;
+    map{ download( $host, $_ ) }( @x , @other );
+}
+
+sub download
+{
+    my ( $host, $uri ) = @_;
+    print "sync $host $uri\n";
+
+    my $dir = "$path/cache/$uri";
+    $dir =~ s/\/[^\/]+$//;
+    system "mkdir -p '$dir'" unless -d $dir;
+    system  "wget $host/$uri -O $path/cache/$uri" unless -f "$path/cache/$uri";
+}
+
+map{ sync($_) }@host;

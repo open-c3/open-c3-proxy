@@ -22,3 +22,7 @@ git clone https://github.com/open-c3/open-c3-proxy
 ## v1
 
 使用nginx缓存方式，请求过的文件进行缓存。
+
+## v2
+
+通过bin/sync工具把js或者css文件同步到代理机，代理机上有文件的情况下使用代理机的，如果文件不存在，服务请求回后端。

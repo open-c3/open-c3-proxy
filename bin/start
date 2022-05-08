@@ -8,4 +8,4 @@ my $conf = "$path/data/nginx.$addr.$port.conf";
 
 system "cp $path/conf/nginx.conf $conf";
 system "sed -i 's/SERVERADDR/$addr/g' $conf";
-exec "docker run --name openc3-proxy-$addr-$port -p $port:80 -v $conf:/etc/nginx/nginx.conf:ro -d nginx";
+exec "docker run --name openc3-proxy-$addr-$port -p $port:80 -v $conf:/etc/nginx/nginx.conf:ro -v /data/open-c3-proxy/cache:/data -d nginx";
