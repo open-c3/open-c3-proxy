@@ -3,6 +3,8 @@
 my $path  = "/data/open-c3-proxy";
 my @host; map{ push @host, $1 if /^openc3-proxy-(.+)-\d+/ }`docker ps|grep openc3-proxy-|awk '{print \$NF}'`;
 
+map{ $_ =~ s/_/:/ }@host;
+
 my @other = qw(
     fonts/glyphicons-halflings-regular.woff2
     fonts/fontawesome-webfont.woff2

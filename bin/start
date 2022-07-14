@@ -1,11 +1,14 @@
 #!/usr/bin/env perl
 
 my ( $addr, $port ) = @ARGV;
-die "error argv" unless $addr && $port && $addr =~ /^[a-z0-9\.\-]+$/ && $port =~ /^\d+$/;
+die "error argv" unless $addr && $port && $addr =~ /^[a-z0-9:\.\-]+$/ && $port =~ /^\d+$/;
+
+my $alias = $addr;
+$alias =~ s/:/_/;
 
 my $path = "/data/open-c3-proxy";
-my $conf = "$path/data/nginx.$addr.$port.conf";
+my $conf = "$path/data/nginx.$alias.$port.conf";
 
 system "cp $path/conf/nginx.conf $conf";
 system "sed -i 's/SERVERADDR/$addr/g' $conf";
-exec "docker run --name openc3-proxy-$addr-$port -p $port:80 -v $conf:/etc/nginx/nginx.conf:ro -v /data/open-c3-proxy/cache:/data -d nginx";
+exec "docker run --name openc3-proxy-$alias-$port -p $port:80 -v $conf:/etc/nginx/nginx.conf:ro -v /data/open-c3-proxy/cache:/data -d nginx";
